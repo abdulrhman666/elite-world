@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">رسم هندسي لمعدات مخبز</title><desc id="desc">رسم تجريبي لعجانة وفرن مخبز</desc>
+  <defs><linearGradient id="bg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#062832"/><stop offset="1" stop-color="#0083a0"/></linearGradient><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#fff" stroke-opacity=".07"/></pattern></defs>
+  <rect width="800" height="520" fill="url(#bg)"/><rect width="800" height="520" fill="url(#grid)"/>
+  <g fill="none" stroke="#e8fbff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M103 120h275v310H103zM140 169h200v105H140zM140 310h200v82H140z"/>
+    <circle cx="335" cy="408" r="18"/><circle cx="145" cy="408" r="18"/>
+    <path d="M485 125h130v76c0 32-18 55-42 70l18 135H493l18-135c-25-15-42-38-42-70v-76zM455 405h170M522 126V88h62"/>
+    <path d="M470 202c40 25 102 25 143 0" opacity=".75"/>
+  </g>
+  <circle cx="258" cy="343" r="9" fill="#00c7eb"/>
+</svg>

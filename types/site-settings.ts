@@ -1,0 +1,43 @@
+export type SiteSettingsData = {
+  companyNameAr: string;
+  companyNameEn: string;
+  phone: string;
+  whatsapp: string;
+  email: string;
+  city: string;
+  address: string;
+  workingHours: string;
+  riyadhDeliveryEstimate: string;
+  outsideDeliveryEstimate: string;
+  companyDescription: string;
+  commercialRegistration: string | null;
+  taxNumber: string | null;
+  heroTitle: string;
+  heroText: string;
+  heroPrimaryButtonText: string;
+  heroPrimaryButtonUrl: string;
+  heroSecondaryButtonText: string;
+  heroSecondaryButtonUrl: string;
+  heroTertiaryButtonText: string;
+  heroTertiaryButtonUrl: string;
+  heroImage: string;
+  announcementText: string;
+  showAnnouncement: boolean;
+  logo: string;
+  favicon: string;
+  instagramUrl: string | null;
+  xUrl: string | null;
+  linkedinUrl: string | null;
+  tiktokUrl: string | null;
+  showFloatingWhatsapp: boolean;
+  showContactDetails: boolean;
+  footerDescription: string;
+  copyrightText: string;
+  showSocialLinks: boolean;
+};
+
+export type SiteMediaOption = {
+  path: string;
+  label: string;
+  altText: string;
+};

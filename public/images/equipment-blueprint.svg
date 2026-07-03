@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">رسم هندسي لمعدات مطبخ صناعي</title>
+  <desc id="desc">رسم تجريبي بخطوط هندسية لأفران وموقد صناعي</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#071f28"/><stop offset="1" stop-color="#00677f"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#fff" stroke-opacity=".07"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="520" fill="url(#bg)"/><rect width="800" height="520" fill="url(#grid)"/>
+  <g fill="none" stroke="#d8f6ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M90 130h620v292H90zM90 220h620M330 130v292M570 130v292"/>
+    <path d="M135 268h145v106H135zM375 267h150v107H375zM615 267h50v107h-50z" opacity=".85"/>
+    <circle cx="150" cy="180" r="14"/><circle cx="205" cy="180" r="14"/><circle cx="260" cy="180" r="14"/>
+    <path d="M385 178h128M382 402h135M620 404h42"/>
+  </g>
+  <g fill="#00b8df"><circle cx="150" cy="180" r="5"/><circle cx="205" cy="180" r="5"/><circle cx="260" cy="180" r="5"/></g>
+</svg>

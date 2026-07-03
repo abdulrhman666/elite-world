@@ -1,0 +1,56 @@
+{
+  "name": "elite-world",
+  "version": "0.1.0",
+  "private": true,
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "postinstall": "prisma generate",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.check.json --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "catalog:import": "tsx scripts/import-catalog-csv.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init_catalog",
+    "prisma:seed": "prisma db seed",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "5.2.8",
+    "@fontsource/ibm-plex-sans-arabic": "5.2.9",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "csv-parse": "^7.0.0",
+    "dotenv": "^17.4.2",
+    "lucide-react": "1.21.0",
+    "next": "16.2.9",
+    "pg": "^8.22.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "server-only": "^0.0.1",
+    "sharp": "^0.35.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.1",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.9",
+    "prettier": "3.9.0",
+    "prettier-plugin-tailwindcss": "^0.7.0",
+    "prisma": "^7.8.0",
+    "tailwindcss": "4.3.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
+    "typescript": "5.9.3",
+    "vitest": "4.1.9"
+  }
+}

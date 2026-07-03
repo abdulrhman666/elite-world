@@ -1,0 +1,42 @@
+import { siteConfig } from "@/config/site";
+import type { SiteSettingsData } from "@/types/site-settings";
+
+export function getDefaultSiteSettings(): SiteSettingsData {
+  return {
+    companyNameAr: siteConfig.arabicName,
+    companyNameEn: siteConfig.name,
+    phone: siteConfig.phone,
+    whatsapp: siteConfig.whatsapp,
+    email: siteConfig.email,
+    city: siteConfig.city,
+    address: siteConfig.address,
+    workingHours: siteConfig.workingHours,
+    riyadhDeliveryEstimate: siteConfig.shipping.riyadhEstimate,
+    outsideDeliveryEstimate: siteConfig.shipping.outsideRiyadhEstimate,
+    companyDescription: siteConfig.description,
+    commercialRegistration: siteConfig.commercialRegistration || null,
+    taxNumber: siteConfig.taxNumber || null,
+    heroTitle: siteConfig.hero.title,
+    heroText: siteConfig.hero.text,
+    heroPrimaryButtonText: siteConfig.hero.primaryButtonText,
+    heroPrimaryButtonUrl: siteConfig.hero.primaryButtonUrl,
+    heroSecondaryButtonText: siteConfig.hero.secondaryButtonText,
+    heroSecondaryButtonUrl: siteConfig.hero.secondaryButtonUrl,
+    heroTertiaryButtonText: siteConfig.hero.tertiaryButtonText,
+    heroTertiaryButtonUrl: siteConfig.hero.tertiaryButtonUrl,
+    heroImage: siteConfig.hero.image,
+    announcementText: siteConfig.announcement.text,
+    showAnnouncement: siteConfig.announcement.visible,
+    logo: siteConfig.logo,
+    favicon: siteConfig.favicon,
+    instagramUrl: siteConfig.social.instagram,
+    xUrl: siteConfig.social.x,
+    linkedinUrl: siteConfig.social.linkedin,
+    tiktokUrl: siteConfig.social.tiktok,
+    showFloatingWhatsapp: siteConfig.showFloatingWhatsapp,
+    showContactDetails: siteConfig.showContactDetails,
+    footerDescription: siteConfig.footer.description,
+    copyrightText: siteConfig.footer.copyright,
+    showSocialLinks: siteConfig.footer.showSocialLinks,
+  };
+}

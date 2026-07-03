@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">رسم هندسي لطاولة ستانلس</title><desc id="desc">رسم تجريبي لطاولة تحضير وحوض ستانلس</desc>
+  <defs><linearGradient id="bg" x1="1" y1="0" x2="0" y2="1"><stop stop-color="#0b303a"/><stop offset="1" stop-color="#00677f"/></linearGradient><pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M25 0H0V25" fill="none" stroke="#fff" stroke-opacity=".07"/></pattern></defs>
+  <rect width="800" height="520" fill="url(#bg)"/><rect width="800" height="520" fill="url(#grid)"/>
+  <g fill="none" stroke="#ecfbff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M88 185h624v73H88zM127 258v188M673 258v188M135 407h530M210 258v149M590 258v149"/>
+    <path d="M390 185v73M405 219h225"/>
+    <path d="M165 186c8 48 35 63 95 63s87-15 95-63M260 185v-53c0-35 51-35 51 0"/>
+    <path d="M304 133h37M155 447h-55M700 447h-55"/>
+  </g>
+  <path d="M98 197h604" stroke="#00c8ee" stroke-width="7"/>
+</svg>

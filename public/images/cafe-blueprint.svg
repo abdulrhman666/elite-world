@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">رسم هندسي لمعدات كافيه</title><desc id="desc">رسم تجريبي لماكينة قهوة تجارية</desc>
+  <defs><linearGradient id="bg"><stop stop-color="#0c2a33"/><stop offset="1" stop-color="#00677f"/></linearGradient><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#fff" stroke-opacity=".065"/></pattern></defs>
+  <rect width="800" height="520" fill="url(#bg)"/><rect width="800" height="520" fill="url(#grid)"/>
+  <g fill="none" stroke="#e8fbff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M112 159h575v232H112zM150 118h500v41M165 391v42M635 391v42M105 433h590"/>
+    <circle cx="245" cy="227" r="35"/><circle cx="400" cy="227" r="35"/><circle cx="555" cy="227" r="35"/>
+    <path d="M225 285v58h40v-58M380 285v58h40v-58M535 285v58h40v-58M190 367h420"/>
+    <path d="M235 209l20 18M390 209l20 18M545 209l20 18" opacity=".8"/>
+  </g>
+  <path d="M127 174h545" stroke="#00c8ee" stroke-width="8"/>
+</svg>

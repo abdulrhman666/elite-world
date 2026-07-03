@@ -1,0 +1,467 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductAvailability {
+  IN_STOCK
+  ON_REQUEST
+}
+
+enum QuoteStatus {
+  NEW
+  RESPONDED
+  CANCELLED
+}
+
+enum OrderStatus {
+  NEW
+  PENDING_PAYMENT
+  CONFIRMED
+  IN_PROGRESS
+  READY_TO_SHIP
+  SHIPPED
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+}
+
+enum OrderPaymentStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+model Category {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  nameEn         String
+  description    String
+  image          String
+  icon           String
+  subcategories  Json
+  sortOrder      Int       @default(0)
+  seoTitle       String?
+  seoDescription String?
+  canonicalUrl   String?
+  seoIndexable   Boolean   @default(true)
+  ogTitle        String?
+  ogDescription  String?
+  ogImage        String?
+  seoImageAlt    String?
+  products       Product[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Brand {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  origin      String?
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id               String                 @id @default(cuid())
+  nameAr           String
+  nameEn           String
+  slug             String                 @unique
+  sku              String                 @unique
+  model            String
+  categoryId       String
+  category         Category               @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  subcategorySlug  String
+  brandId          String
+  brand            Brand                  @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  origin           String
+  shortDescription String
+  description      String
+  price            Decimal?               @db.Decimal(12, 2)
+  stockQuantity    Int                    @default(0)
+  availability     ProductAvailability
+  leadTime         String
+  warranty         String
+  image            String
+  badge            String?
+  featured         Boolean                @default(false)
+  sourceCreatedAt  DateTime
+  sortOrder        Int                    @default(0)
+  features         String[]
+  uses             String[]
+  technicalFile    String?
+  seoTitle         String?
+  seoDescription   String?
+  canonicalUrl     String?
+  seoIndexable     Boolean                @default(true)
+  ogTitle          String?
+  ogDescription    String?
+  ogImage          String?
+  seoImageAlt      String?
+  specifications   ProductSpecification[]
+  images           ProductImage[]
+  quoteItems       QuoteItem[]
+  orderItems       OrderItem[]
+  wishlistItems    WishlistItem[]
+  cartItems        Cart[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([availability])
+  @@index([stockQuantity])
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  path      String
+  altText   String
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+  mimeType  String
+  width     Int?
+  height    Int?
+  sizeBytes Int?
+  createdAt DateTime @default(now())
+
+  @@unique([productId, path])
+  @@index([productId, sortOrder])
+  @@index([path])
+}
+
+model ProductSpecification {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label     String
+  value     String
+  sortOrder Int     @default(0)
+
+  @@unique([productId, label])
+  @@index([productId])
+}
+
+model SiteSettings {
+  id                      Int      @id @default(1)
+  companyNameAr           String
+  companyNameEn           String
+  phone                   String
+  whatsapp                String
+  email                   String
+  city                    String
+  address                 String
+  workingHours            String
+  riyadhDeliveryEstimate  String   @default("3–7 أيام عمل")
+  outsideDeliveryEstimate String   @default("5–10 أيام عمل")
+  companyDescription      String
+  commercialRegistration  String?
+  taxNumber               String?
+  heroTitle               String
+  heroText                String
+  heroPrimaryButtonText   String
+  heroPrimaryButtonUrl    String
+  heroSecondaryButtonText String
+  heroSecondaryButtonUrl  String
+  heroTertiaryButtonText  String
+  heroTertiaryButtonUrl   String
+  heroImage               String
+  announcementText        String
+  showAnnouncement        Boolean  @default(false)
+  logo                    String
+  favicon                 String
+  instagramUrl            String?
+  xUrl                    String?
+  linkedinUrl             String?
+  tiktokUrl               String?
+  showFloatingWhatsapp    Boolean  @default(true)
+  showContactDetails      Boolean  @default(true)
+  footerDescription       String
+  copyrightText           String
+  showSocialLinks         Boolean  @default(true)
+  updatedAt               DateTime @updatedAt
+}
+
+model PageSeo {
+  path           String   @id
+  label          String
+  seoTitle       String?
+  seoDescription String?
+  canonicalUrl   String?
+  seoIndexable   Boolean  @default(true)
+  ogTitle        String?
+  ogDescription  String?
+  ogImage        String?
+  seoImageAlt    String?
+  updatedAt      DateTime @updatedAt
+}
+
+model SlugRedirect {
+  id              String   @id @default(cuid())
+  sourcePath      String   @unique
+  destinationPath String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ContentPage {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  title            String
+  eyebrow          String
+  heroTitle        String
+  heroDescription  String
+  heroImage        String
+  sections         Json
+  primaryCtaText   String
+  primaryCtaUrl    String
+  secondaryCtaText String?
+  secondaryCtaUrl  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  name         String
+  companyName  String?
+  phone        String
+  city         String
+  address      String?
+  role         AdminRole?
+  orders       Order[]
+  quotes       Quote[]
+  wishlist     WishlistItem[]
+  cart         Cart[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([createdAt])
+  @@index([role])
+  @@map("Customer")
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId, createdAt])
+  @@index([productId])
+}
+
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+  @@index([userId, createdAt])
+  @@index([productId])
+}
+
+model PaymentSettings {
+  id                     Int      @id @default(1)
+  provider               String   @default("mock")
+  publicKeyEncrypted     String?
+  secretKeyEncrypted     String?
+  webhookSecretEncrypted String?
+  updatedAt              DateTime @updatedAt
+}
+
+model PaymentProvider {
+  id                 String   @id @default(cuid())
+  name               String   @unique
+  endpoint           String
+  apiKeyEncrypted    String?
+  secretKeyEncrypted String?
+  isActive           Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+model BlogPost {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  excerpt        String
+  content        String
+  category       String
+  image          String
+  published      Boolean  @default(false)
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([published, createdAt])
+  @@index([category])
+}
+
+model Quote {
+  id            String      @id @default(cuid())
+  number        String      @unique
+  trackingToken String      @unique
+  status        QuoteStatus @default(NEW)
+  customerName  String
+  phone         String
+  city          String
+  customerNotes String?
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items         QuoteItem[]
+  order         Order?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([status, createdAt])
+  @@index([customerName])
+  @@index([userId, createdAt])
+}
+
+model QuoteItem {
+  id          String   @id @default(cuid())
+  quoteId     String
+  quote       Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productSlug String
+  productName String
+  sku         String
+  model       String
+  quantity    Int
+  unitPrice   Decimal? @db.Decimal(12, 2)
+
+  @@index([quoteId])
+  @@index([productId])
+}
+
+model Order {
+  id               String               @id @default(cuid())
+  number           String               @unique
+  trackingToken    String               @unique
+  quoteId          String               @unique
+  quote            Quote                @relation(fields: [quoteId], references: [id], onDelete: Restrict)
+  status           OrderStatus          @default(NEW)
+  totalAmount      Decimal              @default(0) @db.Decimal(12, 2)
+  paidAmount       Decimal              @default(0) @db.Decimal(12, 2)
+  paymentStatus    OrderPaymentStatus   @default(UNPAID)
+  customerName     String
+  phone            String
+  city             String
+  shippingCarrier  String?
+  trackingNumber   String?
+  deliveryEstimate String?
+  customerNotes    String?
+  userId           String?
+  user             User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items            OrderItem[]
+  statusHistory    OrderStatusHistory[]
+  payment          Payment?
+  invoice          Invoice?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  @@index([status, createdAt])
+  @@index([customerName])
+  @@index([userId, createdAt])
+  @@index([trackingNumber])
+}
+
+model OrderStatusHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    OrderStatus
+  note      String?
+  createdAt DateTime    @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  orderId           String        @unique
+  order             Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount            Decimal       @db.Decimal(12, 2)
+  currency          String        @default("SAR")
+  status            PaymentStatus @default(PENDING)
+  provider          String
+  providerRef       String?
+  method            String?
+  metadata          Json          @default("{}")
+  webhookEventId    String?
+  webhookReceivedAt DateTime?
+  attachmentUrl     String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@unique([provider, webhookEventId])
+  @@index([orderId, createdAt])
+  @@index([provider])
+  @@index([providerRef])
+  @@index([status])
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productSlug String
+  productName String
+  sku         String
+  model       String
+  quantity    Int
+  unitPrice   Decimal? @db.Decimal(12, 2)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  orderId       String   @unique
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  invoiceNumber String
+  filePath      String
+  originalName  String
+  mimeType      String
+  sizeBytes     Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">رسم هندسي لثلاجة صناعية</title><desc id="desc">رسم تجريبي لوحدة تبريد تجارية</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#08232c"/><stop offset="1" stop-color="#007d98"/></linearGradient><pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" fill="none" stroke="#fff" stroke-opacity=".07"/></pattern></defs>
+  <rect width="800" height="520" fill="url(#bg)"/><rect width="800" height="520" fill="url(#grid)"/>
+  <g fill="none" stroke="#ebfbff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="180" y="74" width="440" height="370" rx="12"/><path d="M400 74v370M180 144h440"/>
+    <path d="M355 205v100M445 205v100M235 196h110M455 196h110M235 346h110M455 346h110"/>
+    <circle cx="370" cy="112" r="10"/><path d="M590 108h-95"/>
+    <path d="M96 250l34-20v40l34-20M704 250l-34-20v40l-34-20" opacity=".8"/>
+  </g>
+  <path d="M190 155h420" stroke="#00c8ee" stroke-width="7"/>
+</svg>

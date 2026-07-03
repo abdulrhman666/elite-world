@@ -1,0 +1,56 @@
+{
+  "sourceFile": "elite_world_products_catalog.csv",
+  "sourceRows": 214,
+  "acceptedProducts": 214,
+  "excludedRows": [],
+  "potentialDuplicates": [
+    {
+      "row": 144,
+      "sku": "EW-QT-0144",
+      "slug": "waffle-maker-0144",
+      "reference": "130"
+    },
+    {
+      "row": 173,
+      "sku": "EW-QT-0173",
+      "slug": "undercounter-refrigerator-0173",
+      "reference": "162"
+    },
+    {
+      "row": 183,
+      "sku": "EW-QT-0183",
+      "slug": "commercial-electric-fryer-london-ii-0183",
+      "reference": "177"
+    },
+    {
+      "row": 199,
+      "sku": "EW-QT-0199",
+      "slug": "commercial-electric-fryer-13-l-2-burner-0199",
+      "reference": "131"
+    }
+  ],
+  "missingFields": {
+    "name_en": 0,
+    "brand": 123,
+    "model": 198,
+    "country_of_origin": 50,
+    "price_sar": 211,
+    "availability": 214,
+    "warranty": 214,
+    "image_filename": 1,
+    "datasheet_filename": 0
+  },
+  "missingImageFiles": 1,
+  "missingDatasheetFiles": 214,
+  "categoryCounts": {
+    "bakery-equipment": 43,
+    "cooking-equipment": 56,
+    "cafe-equipment": 14,
+    "refrigeration": 42,
+    "stainless-steel": 26,
+    "warewashing": 6,
+    "food-preparation": 17,
+    "packaging": 1,
+    "buffet-display": 9
+  }
+}

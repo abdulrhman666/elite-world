@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="title desc">
+  <title id="title">مخطط مطبخ مركزي</title><desc id="desc">رسم تجريبي لمخطط هندسي وتدفق مشروع</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#082731"/><stop offset="1" stop-color="#007d96"/></linearGradient><pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#fff" stroke-opacity=".07"/></pattern></defs>
+  <rect width="800" height="520" fill="url(#bg)"/><rect width="800" height="520" fill="url(#grid)"/>
+  <g fill="none" stroke="#ecfbff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M98 80h604v360H98zM98 220h250V80M348 220v220M512 80v190h190M512 270v170"/>
+    <path d="M148 125h150v53H148zM145 272h155v116H145zM397 120h73v245h-73zM558 318h95v70h-95z" opacity=".85"/>
+    <path d="M272 250c45 30 83 30 123 4M488 248c35 2 51 18 69 49" stroke="#00c8ee" stroke-width="9"/>
+    <path d="M384 244l16 10-16 12M547 284l10 13-14 10"/>
+  </g>
+</svg>

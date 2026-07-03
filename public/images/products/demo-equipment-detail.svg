@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">ELITE WORLD demo equipment details</title>
+  <desc id="desc">Technical detail placeholder for demo restaurant equipment</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#0f3038"/>
+      <stop offset="1" stop-color="#00677f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg2)"/>
+  <g fill="none" stroke="#77d8e8" opacity=".28">
+    <path d="M0 180h1200M0 360h1200M0 540h1200M0 720h1200"/>
+    <path d="M200 0v900M400 0v900M600 0v900M800 0v900M1000 0v900"/>
+  </g>
+  <g transform="translate(220 145)" fill="none" stroke="#ffffff" stroke-width="10">
+    <rect x="80" y="20" width="600" height="520" rx="30"/>
+    <rect x="135" y="85" width="490" height="280" rx="18"/>
+    <path d="M170 145h420M170 225h420M170 305h420" opacity=".7"/>
+    <circle cx="175" cy="435" r="25" fill="#08a4c1" stroke="none"/>
+    <circle cx="255" cy="435" r="25" fill="#77d8e8" stroke="none"/>
+    <rect x="330" y="405" width="255" height="55" rx="14"/>
+    <path d="M115 540v75M645 540v75" stroke-linecap="round"/>
+  </g>
+  <text x="600" y="815" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="5">ELITE WORLD</text>
+  <text x="600" y="855" text-anchor="middle" fill="#b9e8ef" font-family="Arial, sans-serif" font-size="23">TECHNICAL VIEW · DEMO</text>
+</svg>
