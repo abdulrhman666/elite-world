@@ -3,6 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { removeWishlistAction } from "@/app/account/actions";
 import {
+  changeCustomerPasswordAction,
   logoutCustomerAction,
   updateCustomerProfileAction,
 } from "@/app/auth/actions";
@@ -55,8 +56,13 @@ export default async function AccountPage({
             تم تحديث بيانات الحساب.
           </Alert>
         )}
+        {params.success === "password" && (
+          <Alert title="تم تغيير كلمة المرور" className="mt-6">
+            استخدم كلمة المرور الجديدة في تسجيل الدخول القادم.
+          </Alert>
+        )}
         {params.error && (
-          <Alert className="mt-6">تعذر حفظ البيانات. تحقق من الحقول.</Alert>
+          <Alert className="mt-6">{accountErrorMessage(params.error)}</Alert>
         )}
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[.8fr_1.2fr]">
@@ -89,6 +95,41 @@ export default async function AccountPage({
               </div>
               <Button type="submit">حفظ البيانات</Button>
             </form>
+
+            <div className="border-brand-border mt-7 border-t pt-6">
+              <h3 className="text-brand-ink text-lg font-bold">
+                تغيير كلمة المرور
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                اكتب كلمة المرور الحالية ثم اختر كلمة جديدة من 10 أحرف على
+                الأقل.
+              </p>
+              <form
+                action={changeCustomerPasswordAction}
+                className="mt-4 grid gap-4"
+              >
+                <PasswordField
+                  name="currentPassword"
+                  label="كلمة المرور الحالية"
+                  autoComplete="current-password"
+                />
+                <PasswordField
+                  name="newPassword"
+                  label="كلمة المرور الجديدة"
+                  autoComplete="new-password"
+                  minLength={10}
+                />
+                <PasswordField
+                  name="confirmPassword"
+                  label="تأكيد كلمة المرور الجديدة"
+                  autoComplete="new-password"
+                  minLength={10}
+                />
+                <Button type="submit" variant="outline">
+                  تحديث كلمة المرور
+                </Button>
+              </form>
+            </div>
           </section>
 
           <section className="border-brand-border rounded-3xl border bg-white p-6">
@@ -235,6 +276,44 @@ export default async function AccountPage({
         </section>
       </Container>
     </section>
+  );
+}
+
+function accountErrorMessage(error: string) {
+  if (error === "password-current") return "كلمة المرور الحالية غير صحيحة.";
+  if (error === "password-match")
+    return "كلمتا المرور الجديدتان غير متطابقتين.";
+  if (error === "password-length") {
+    return "كلمة المرور الجديدة يجب أن تكون 10 أحرف على الأقل.";
+  }
+  if (error === "password") return "تعذر تغيير كلمة المرور. حاول مرة أخرى.";
+  return "تعذر حفظ البيانات. تحقق من الحقول.";
+}
+
+function PasswordField({
+  name,
+  label,
+  autoComplete,
+  minLength,
+}: {
+  name: string;
+  label: string;
+  autoComplete: "current-password" | "new-password";
+  minLength?: number;
+}) {
+  return (
+    <label className="grid gap-2 text-sm font-semibold">
+      {label}
+      <input
+        name={name}
+        type="password"
+        required
+        minLength={minLength}
+        maxLength={200}
+        autoComplete={autoComplete}
+        className="border-brand-border focus:border-brand-cyan focus:ring-brand-cyan/15 min-h-12 rounded-xl border px-4 outline-none focus:ring-4"
+      />
+    </label>
   );
 }
 

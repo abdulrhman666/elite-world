@@ -125,3 +125,48 @@ export async function updateCustomerProfileAction(formData: FormData) {
   revalidatePath("/account");
   redirect("/account?success=profile");
 }
+
+export async function changeCustomerPasswordAction(formData: FormData) {
+  const session = await getCustomerSession();
+  if (!session) redirect("/auth/login?error=session");
+
+  const currentPassword = String(formData.get("currentPassword") ?? "");
+  const newPassword = String(formData.get("newPassword") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+  if (newPassword.length < 10 || newPassword.length > 200) {
+    redirect("/account?error=password-length");
+  }
+  if (newPassword !== confirmPassword) {
+    redirect("/account?error=password-match");
+  }
+
+  let customer: { passwordHash: string } | null;
+  try {
+    customer = await getPrismaClient().user.findUnique({
+      where: { id: session.userId },
+      select: { passwordHash: true },
+    });
+  } catch {
+    redirect("/account?error=password");
+  }
+
+  if (
+    !customer ||
+    !(await verifyPassword(currentPassword, customer.passwordHash))
+  ) {
+    redirect("/account?error=password-current");
+  }
+
+  try {
+    await getPrismaClient().user.update({
+      where: { id: session.userId },
+      data: { passwordHash: await hashPassword(newPassword) },
+    });
+  } catch {
+    redirect("/account?error=password");
+  }
+
+  revalidatePath("/account");
+  redirect("/account?success=password");
+}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useCart } from "@/components/cart/cart-provider";
 import { TopBar } from "@/components/layout/top-bar";
 import { ButtonLink } from "@/components/ui/button";
@@ -129,93 +130,96 @@ export function Header({ settings }: { settings: SiteSettingsData }) {
         </Container>
       </nav>
 
-      {open && (
-        <div className="fixed inset-0 z-[70] lg:hidden" role="presentation">
-          <button
-            type="button"
-            className="bg-brand-ink/65 absolute inset-0"
-            onClick={() => setOpen(false)}
-            aria-label="إغلاق قائمة التنقل"
-          />
-          <aside
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="قائمة التنقل"
-            className="absolute inset-y-0 right-0 flex w-[min(88vw,390px)] flex-col overflow-y-auto bg-white shadow-2xl"
-          >
-            <div className="border-brand-border flex min-h-20 items-center justify-between border-b px-5">
-              <Image
-                src={settings.logo}
-                width={74}
-                height={59}
-                alt={`شعار ${settings.companyNameEn}`}
-                className="h-14 w-auto object-contain"
-              />
-              <button
-                ref={closeRef}
-                type="button"
-                onClick={() => setOpen(false)}
-                className="border-brand-border grid size-11 place-items-center rounded-xl border"
-                aria-label="إغلاق القائمة"
-              >
-                <X className="size-5" aria-hidden />
-              </button>
-            </div>
-            <nav aria-label="التنقل للجوال" className="flex-1 p-4">
-              {siteConfig.navigation.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div className="fixed inset-0 z-[70] lg:hidden" role="presentation">
+            <button
+              type="button"
+              className="bg-brand-ink/65 absolute inset-0"
+              onClick={() => setOpen(false)}
+              aria-label="إغلاق قائمة التنقل"
+            />
+            <aside
+              id="mobile-menu"
+              role="dialog"
+              aria-modal="true"
+              aria-label="قائمة التنقل"
+              className="absolute inset-y-0 right-0 flex w-[min(88vw,390px)] flex-col overflow-y-auto bg-white shadow-2xl"
+            >
+              <div className="border-brand-border flex min-h-20 items-center justify-between border-b px-5">
+                <Image
+                  src={settings.logo}
+                  width={74}
+                  height={59}
+                  alt={`شعار ${settings.companyNameEn}`}
+                  className="h-14 w-auto object-contain"
+                />
+                <button
+                  ref={closeRef}
+                  type="button"
                   onClick={() => setOpen(false)}
-                  className={cn(
-                    "text-brand-ink hover:bg-brand-surface flex min-h-12 items-center rounded-xl px-4 font-semibold",
-                    pathname === item.href &&
-                      "bg-brand-cyan/10 text-brand-petroleum",
-                  )}
+                  className="border-brand-border grid size-11 place-items-center rounded-xl border"
+                  aria-label="إغلاق القائمة"
                 >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="border-brand-border grid gap-3 border-t p-5">
-              <div className="grid grid-cols-2 gap-3">
+                  <X className="size-5" aria-hidden />
+                </button>
+              </div>
+              <nav aria-label="التنقل للجوال" className="flex-1 p-4">
+                {siteConfig.navigation.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "text-brand-ink hover:bg-brand-surface flex min-h-12 items-center rounded-xl px-4 font-semibold",
+                      pathname === item.href &&
+                        "bg-brand-cyan/10 text-brand-petroleum",
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+              <div className="border-brand-border grid gap-3 border-t p-5">
+                <div className="grid grid-cols-2 gap-3">
+                  <ButtonLink
+                    href="/account"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setOpen(false)}
+                  >
+                    حسابي
+                  </ButtonLink>
+                  <ButtonLink
+                    href="/favorites"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setOpen(false)}
+                  >
+                    المفضلة
+                  </ButtonLink>
+                </div>
                 <ButtonLink
-                  href="/account"
-                  variant="outline"
+                  href="/cart"
                   className="w-full"
                   onClick={() => setOpen(false)}
                 >
-                  حسابي
+                  السلة ({itemCount})
                 </ButtonLink>
                 <ButtonLink
-                  href="/favorites"
+                  href="/quote"
                   variant="outline"
                   className="w-full"
                   onClick={() => setOpen(false)}
                 >
-                  المفضلة
+                  طلب عرض سعر
                 </ButtonLink>
               </div>
-              <ButtonLink
-                href="/cart"
-                className="w-full"
-                onClick={() => setOpen(false)}
-              >
-                السلة ({itemCount})
-              </ButtonLink>
-              <ButtonLink
-                href="/quote"
-                variant="outline"
-                className="w-full"
-                onClick={() => setOpen(false)}
-              >
-                طلب عرض سعر
-              </ButtonLink>
-            </div>
-          </aside>
-        </div>
-      )}
+            </aside>
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }
