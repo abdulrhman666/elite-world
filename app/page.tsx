@@ -1,8 +1,0 @@
-export default function Home() {
-  return (
-    <main style={{ padding: 40, textAlign: "center" }}>
-      <h1>ELITE WORLD 🚀</h1>
-      <p>Store is now live</p>
-    </main>
-  );
-}
