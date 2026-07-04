@@ -1,5 +1,5 @@
 import "server-only";
-import { ProductAvailability } from "@prisma/client";
+import { Prisma, ProductAvailability } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import { isSeoAiConfigured } from "@/lib/ai/seo-assistant";
 import { getAdminMediaOptions } from "@/lib/admin/media-options";
@@ -48,6 +48,8 @@ export type AdminCategoryRecord = SeoFormValues & {
   slug: string;
   description: string;
   image: string;
+  cardImage: string;
+  automaticImage: string;
   icon: string;
   sortOrder: number;
   productCount: number;
@@ -55,7 +57,7 @@ export type AdminCategoryRecord = SeoFormValues & {
 
 export type AdminCategoryInput = Omit<
   AdminCategoryRecord,
-  "id" | "productCount"
+  "id" | "productCount" | "cardImage" | "automaticImage"
 >;
 
 export type AdminBrandRecord = {
@@ -73,6 +75,15 @@ export type AdminBrandInput = Pick<
 
 const setupMessage =
   "وضع القراءة مفعّل حالياً. ستظهر بيانات الكتالوج ويصبح التعديل متاحاً بعد ربط قاعدة بيانات الموقع.";
+
+const legacyCategoryArtwork = new Set([
+  "/images/equipment-blueprint.svg",
+  "/images/bakery-blueprint.svg",
+  "/images/cafe-blueprint.svg",
+  "/images/cooling-blueprint.svg",
+  "/images/project-blueprint.svg",
+  "/images/stainless-blueprint.svg",
+]);
 
 export function getAdminDatabaseConfigurationIssue() {
   if (!process.env.DATABASE_URL) {
@@ -136,39 +147,45 @@ export async function getAdminProducts(query = "", page: number | string = 1) {
       products: [] as AdminProductListItem[],
       page: safePage,
       hasNext: false,
+      totalPages: 1,
+      totalCount: 0,
       readOnly: true,
       message: configurationIssue,
     };
   }
 
   try {
-    const products = await getPrismaClient().product.findMany({
-      where: query
-        ? {
-            OR: [
-              { nameAr: { contains: query, mode: "insensitive" } },
-              { nameEn: { contains: query, mode: "insensitive" } },
-              { sku: { contains: query, mode: "insensitive" } },
-              { model: { contains: query, mode: "insensitive" } },
-              { category: { name: { contains: query, mode: "insensitive" } } },
-            ],
-          }
-        : undefined,
-      select: {
-        id: true,
-        nameAr: true,
-        sku: true,
-        price: true,
-        stockQuantity: true,
-        category: { select: { name: true } },
-      },
-      orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
-      skip: (safePage - 1) * ADMIN_PAGE_SIZE,
-      take: ADMIN_PAGE_SIZE + 1,
-    });
-    const hasNext = products.length > ADMIN_PAGE_SIZE;
+    const where: Prisma.ProductWhereInput | undefined = query
+      ? {
+          OR: [
+            { nameAr: { contains: query, mode: "insensitive" } },
+            { nameEn: { contains: query, mode: "insensitive" } },
+            { sku: { contains: query, mode: "insensitive" } },
+            { model: { contains: query, mode: "insensitive" } },
+            { category: { name: { contains: query, mode: "insensitive" } } },
+          ],
+        }
+      : undefined;
+    const [products, totalCount] = await Promise.all([
+      getPrismaClient().product.findMany({
+        where,
+        select: {
+          id: true,
+          nameAr: true,
+          sku: true,
+          price: true,
+          stockQuantity: true,
+          category: { select: { name: true } },
+        },
+        orderBy: [{ sortOrder: "asc" }, { id: "asc" }],
+        skip: (safePage - 1) * ADMIN_PAGE_SIZE,
+        take: ADMIN_PAGE_SIZE,
+      }),
+      getPrismaClient().product.count({ where }),
+    ]);
+    const totalPages = Math.max(1, Math.ceil(totalCount / ADMIN_PAGE_SIZE));
     return {
-      products: products.slice(0, ADMIN_PAGE_SIZE).map((product) => ({
+      products: products.map((product) => ({
         id: product.id,
         nameAr: product.nameAr,
         sku: product.sku,
@@ -181,7 +198,9 @@ export async function getAdminProducts(query = "", page: number | string = 1) {
             : ("on-request" as const),
       })),
       page: safePage,
-      hasNext,
+      hasNext: safePage < totalPages,
+      totalPages,
+      totalCount,
       readOnly: false,
       message: null,
     };
@@ -190,6 +209,8 @@ export async function getAdminProducts(query = "", page: number | string = 1) {
       products: [] as AdminProductListItem[],
       page: safePage,
       hasNext: false,
+      totalPages: 1,
+      totalCount: 0,
       readOnly: true,
       message: connectionMessage(),
     };
@@ -449,6 +470,8 @@ export async function getAdminCategories() {
     return {
       records: [] as AdminCategoryRecord[],
       media: [] as SiteMediaOption[],
+      categoryMedia: [] as SiteMediaOption[],
+      productMediaByCategory: {} as Record<string, SiteMediaOption[]>,
       aiEnabled: isSeoAiConfigured(),
       readOnly: true,
       message: configurationIssue,
@@ -475,26 +498,72 @@ export async function getAdminCategories() {
           ogDescription: true,
           ogImage: true,
           seoImageAlt: true,
+          products: {
+            where: {
+              image: {
+                not: "/images/products/demo-equipment-placeholder.svg",
+              },
+            },
+            select: {
+              nameAr: true,
+              image: true,
+              seoImageAlt: true,
+            },
+            orderBy: [{ featured: "desc" }, { sortOrder: "asc" }],
+            take: 80,
+          },
           _count: { select: { products: true } },
         },
         orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
       }),
       getAdminMediaOptions(),
     ]);
-    return {
-      records: categories.map((category) => ({
+    const records = categories.map((category) => {
+      const automaticImage =
+        category.products[0]?.image ?? "/images/equipment-blueprint.svg";
+      return {
         id: category.id,
         name: category.name,
         nameEn: category.nameEn,
         slug: category.slug,
         description: category.description,
         image: category.image,
+        cardImage: legacyCategoryArtwork.has(category.image)
+          ? automaticImage
+          : category.image,
+        automaticImage,
         icon: category.icon,
         sortOrder: category.sortOrder,
         ...mapSeoValues(category),
         productCount: category._count.products,
-      })),
+      };
+    });
+    const categoryMedia = records
+      .filter(
+        (category) =>
+          !legacyCategoryArtwork.has(category.image) &&
+          category.image !== "/images/products/demo-equipment-placeholder.svg",
+      )
+      .map((category) => ({
+        path: category.image,
+        label: category.name,
+        altText: `صورة قسم ${category.name}`,
+      }));
+    const productMediaByCategory = Object.fromEntries(
+      categories.map((category) => [
+        category.id,
+        category.products.map((product) => ({
+          path: product.image,
+          label: product.nameAr,
+          altText: product.seoImageAlt || `صورة المنتج ${product.nameAr}`,
+        })),
+      ]),
+    );
+    return {
+      records,
       media,
+      categoryMedia,
+      productMediaByCategory,
       aiEnabled: isSeoAiConfigured(),
       readOnly: false,
       message: null,
@@ -503,6 +572,8 @@ export async function getAdminCategories() {
     return {
       records: [] as AdminCategoryRecord[],
       media: [] as SiteMediaOption[],
+      categoryMedia: [] as SiteMediaOption[],
+      productMediaByCategory: {} as Record<string, SiteMediaOption[]>,
       aiEnabled: isSeoAiConfigured(),
       readOnly: true,
       message: connectionMessage(),

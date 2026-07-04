@@ -37,7 +37,8 @@ export default async function AdminProductsPage({
           <p className="text-brand-cyan text-sm font-bold">الكتالوج</p>
           <h1 className="text-brand-ink mt-2 text-3xl font-bold">المنتجات</h1>
           <p className="mt-2 text-sm text-slate-600">
-            {catalog.products.length} نتيجة في الصفحة {catalog.page}
+            {catalog.totalCount} منتج — الصفحة {catalog.page} من{" "}
+            {catalog.totalPages}
           </p>
         </div>
         {!catalog.readOnly && (
@@ -169,6 +170,7 @@ export default async function AdminProductsPage({
         query={query}
         page={catalog.page}
         hasNext={catalog.hasNext}
+        totalPages={catalog.totalPages}
       />
     </div>
   );

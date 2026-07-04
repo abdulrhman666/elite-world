@@ -23,6 +23,7 @@ export type StoredPaymentAttachment = {
 export const MAX_IMAGE_SIZE_BYTES = 8 * 1024 * 1024;
 export const MAX_IMAGES_PER_UPLOAD = 8;
 export const MAX_PDF_SIZE_BYTES = 10 * 1024 * 1024;
+export type ImageStorageFolder = "products" | "categories";
 export const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/png",
@@ -68,7 +69,7 @@ export function hasPdfSignature(bytes: Uint8Array) {
 }
 
 export interface StorageAdapter {
-  saveImage(file: File): Promise<StoredImage>;
+  saveImage(file: File, folder?: ImageStorageFolder): Promise<StoredImage>;
   saveDocument(file: File): Promise<StoredDocument>;
   savePaymentAttachment(file: File): Promise<StoredPaymentAttachment>;
   readFile(filePath: string): Promise<Uint8Array>;

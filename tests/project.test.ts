@@ -16,7 +16,10 @@ import {
   createCustomerSessionToken,
   verifyCustomerSessionToken,
 } from "../lib/auth/session-token";
-import { normalizeAdminPage } from "../lib/admin/pagination";
+import {
+  getAdminPaginationItems,
+  normalizeAdminPage,
+} from "../lib/admin/pagination";
 import { cn, formatCurrentYear } from "../lib/utils";
 import {
   categoryIconOptions,
@@ -60,6 +63,15 @@ describe("كتالوج CSV", () => {
     expect(normalizeAdminPage("3")).toBe(3);
     expect(normalizeAdminPage("0")).toBe(1);
     expect(normalizeAdminPage("invalid")).toBe(1);
+    expect(getAdminPaginationItems(5, 12)).toEqual([
+      1,
+      "ellipsis-start",
+      4,
+      5,
+      6,
+      "ellipsis-end",
+      12,
+    ]);
   });
 
   it("يوقّع جلسة العميل ويرفض العبث بها", () => {

@@ -1,8 +1,14 @@
 "use client";
 
-import { Save } from "lucide-react";
+import { RotateCcw, Save, Upload } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import {
+  type ChangeEvent,
+  type DragEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SeoFields } from "@/components/admin/seo-fields";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,11 +26,15 @@ export function AdminCategoryForm({
   action,
   category,
   media,
+  categoryMedia = [],
+  productMedia = [],
   aiEnabled,
 }: {
   action: (formData: FormData) => Promise<void>;
   category?: AdminCategoryRecord;
   media: SiteMediaOption[];
+  categoryMedia?: SiteMediaOption[];
+  productMedia?: SiteMediaOption[];
   aiEnabled: boolean;
 }) {
   const [activeTab, setActiveTab] = useState<"data" | "seo">("data");
@@ -76,12 +86,12 @@ export function AdminCategoryForm({
             dir="ltr"
           />
         </label>
-        <Field
-          label="مسار الصورة"
-          name="image"
-          defaultValue={category?.image ?? "/images/equipment-blueprint.svg"}
-          dir="ltr"
-          className="sm:col-span-2"
+        <CategoryCardImagePicker
+          value={category?.image ?? "/images/equipment-blueprint.svg"}
+          previewValue={category?.cardImage}
+          automaticImage={category?.automaticImage}
+          categoryMedia={categoryMedia}
+          productMedia={productMedia}
         />
         <CategoryIconPicker
           value={category?.icon ?? "commercial-oven"}
@@ -134,6 +144,222 @@ export function AdminCategoryForm({
         </Button>
       </div>
     </form>
+  );
+}
+
+const acceptedImageTypes = ["image/jpeg", "image/png", "image/webp"];
+const maxImageSize = 8 * 1024 * 1024;
+
+function CategoryCardImagePicker({
+  value,
+  previewValue,
+  automaticImage,
+  categoryMedia,
+  productMedia,
+}: {
+  value: string;
+  previewValue?: string;
+  automaticImage?: string;
+  categoryMedia: SiteMediaOption[];
+  productMedia: SiteMediaOption[];
+}) {
+  const [selectedPath, setSelectedPath] = useState(value);
+  const [preview, setPreview] = useState(previewValue || value);
+  const [error, setError] = useState("");
+  const fileInput = useRef<HTMLInputElement>(null);
+  const objectUrl = useRef<string | null>(null);
+
+  useEffect(
+    () => () => {
+      if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
+    },
+    [],
+  );
+
+  function clearObjectUrl() {
+    if (objectUrl.current) {
+      URL.revokeObjectURL(objectUrl.current);
+      objectUrl.current = null;
+    }
+  }
+
+  function validateFile(file: File) {
+    if (!acceptedImageTypes.includes(file.type)) {
+      return "اختر صورة JPG أو PNG أو WebP.";
+    }
+    if (file.size <= 0 || file.size > maxImageSize) {
+      return "حجم الصورة يجب ألا يتجاوز 8 MB.";
+    }
+    return "";
+  }
+
+  function previewFile(file: File) {
+    const validationError = validateFile(file);
+    if (validationError) {
+      setError(validationError);
+      if (fileInput.current) fileInput.current.value = "";
+      return;
+    }
+    clearObjectUrl();
+    objectUrl.current = URL.createObjectURL(file);
+    setPreview(objectUrl.current);
+    setError("");
+  }
+
+  function onFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) previewFile(file);
+  }
+
+  function onDrop(event: DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    const file = event.dataTransfer.files?.[0];
+    if (!file || !fileInput.current) return;
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    fileInput.current.files = transfer.files;
+    previewFile(file);
+  }
+
+  function selectExisting(image: SiteMediaOption) {
+    clearObjectUrl();
+    if (fileInput.current) fileInput.current.value = "";
+    setSelectedPath(image.path);
+    setPreview(image.path);
+    setError("");
+  }
+
+  function useAutomaticImage() {
+    clearObjectUrl();
+    if (fileInput.current) fileInput.current.value = "";
+    setSelectedPath("/images/equipment-blueprint.svg");
+    setPreview(automaticImage || "/images/equipment-blueprint.svg");
+    setError("");
+  }
+
+  return (
+    <div className="sm:col-span-2">
+      <input type="hidden" name="image" value={selectedPath} />
+      <span className="text-brand-ink mb-2 block text-sm font-semibold">
+        صورة المعدة داخل بطاقة القسم
+      </span>
+      <div
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={onDrop}
+        className="border-brand-border bg-brand-surface grid gap-4 rounded-2xl border border-dashed p-4 sm:grid-cols-[180px_1fr]"
+      >
+        <div className="border-brand-border relative aspect-[4/3] overflow-hidden rounded-xl border bg-white">
+          <Image
+            src={preview}
+            alt="معاينة صورة بطاقة القسم"
+            fill
+            unoptimized={preview.startsWith("blob:")}
+            className="object-contain p-3"
+            sizes="180px"
+          />
+        </div>
+        <div className="flex flex-col justify-center">
+          <p className="text-brand-ink text-sm font-bold">
+            اسحب الصورة هنا أو اخترها من جهازك
+          </p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">
+            JPG أو PNG أو WebP، وبحد أقصى 8 MB. سيبقى شكل البطاقة كما هو.
+          </p>
+          <input
+            ref={fileInput}
+            type="file"
+            name="categoryImageFile"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={onFileChange}
+            className="sr-only"
+          />
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              size="sm"
+              icon={<Upload className="size-4" aria-hidden />}
+              onClick={() => fileInput.current?.click()}
+            >
+              اختيار من الملفات
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              icon={<RotateCcw className="size-4" aria-hidden />}
+              onClick={useAutomaticImage}
+            >
+              اختيار تلقائي
+            </Button>
+          </div>
+          {error && (
+            <p className="mt-2 text-xs font-semibold text-red-700">{error}</p>
+          )}
+        </div>
+      </div>
+
+      <ImageLibrary
+        title="صور الأقسام السابقة"
+        images={categoryMedia}
+        selectedPath={selectedPath}
+        onSelect={selectExisting}
+      />
+      <ImageLibrary
+        title="صور منتجات هذا القسم"
+        images={productMedia}
+        selectedPath={selectedPath}
+        onSelect={selectExisting}
+      />
+    </div>
+  );
+}
+
+function ImageLibrary({
+  title,
+  images,
+  selectedPath,
+  onSelect,
+}: {
+  title: string;
+  images: SiteMediaOption[];
+  selectedPath: string;
+  onSelect: (image: SiteMediaOption) => void;
+}) {
+  if (images.length === 0) return null;
+  return (
+    <details className="border-brand-border mt-3 rounded-2xl border bg-white">
+      <summary className="text-brand-petroleum cursor-pointer px-4 py-3 text-sm font-bold">
+        {title} ({images.length})
+      </summary>
+      <div className="grid max-h-80 grid-cols-2 gap-3 overflow-y-auto border-t border-slate-100 p-4 sm:grid-cols-4 lg:grid-cols-6">
+        {images.map((image) => (
+          <button
+            key={`${title}-${image.path}`}
+            type="button"
+            onClick={() => onSelect(image)}
+            className={`rounded-xl border p-2 text-start transition ${
+              selectedPath === image.path
+                ? "border-brand-cyan ring-brand-cyan/20 bg-cyan-50 ring-2"
+                : "border-brand-border hover:border-brand-cyan"
+            }`}
+            title={image.label}
+          >
+            <span className="relative block aspect-square overflow-hidden rounded-lg bg-slate-50">
+              <Image
+                src={image.path}
+                alt={image.altText}
+                fill
+                className="object-contain p-1"
+                sizes="120px"
+              />
+            </span>
+            <span className="mt-2 line-clamp-2 block text-xs font-semibold text-slate-600">
+              {image.label}
+            </span>
+          </button>
+        ))}
+      </div>
+    </details>
   );
 }
 

@@ -43,6 +43,7 @@ import {
   SeoAssistantUnavailableError,
 } from "@/lib/ai/seo-assistant";
 import { ImageStorageError } from "@/lib/storage/local-storage-adapter";
+import { getStorageAdapter } from "@/lib/storage";
 import { isValidCategoryIconValue } from "@/lib/category-icons";
 import { updatePageSeo } from "@/lib/seo/page-seo";
 import { isPlaceholderValue } from "@/lib/whatsapp";
@@ -346,6 +347,7 @@ function parseBrandInput(formData: FormData): AdminBrandInput {
 }
 
 function adminRecordError(error: unknown) {
+  if (error instanceof ImageStorageError) return error.message;
   const message = mutationErrorMessage(error);
   if (message.includes("SKU")) {
     return "يوجد سجل آخر يستخدم الاسم أو Slug نفسه.";
@@ -359,11 +361,26 @@ function adminRecordError(error: unknown) {
   return message;
 }
 
+async function uploadCategoryImage(formData: FormData) {
+  const file = formData.get("categoryImageFile");
+  if (!(file instanceof File) || file.size <= 0) return null;
+  const stored = await getStorageAdapter().saveImage(file, "categories");
+  formData.set("image", stored.path);
+  return stored.path;
+}
+
 export async function createCategoryAction(formData: FormData) {
   await requireAdminAction();
+  let uploadedImagePath: string | null = null;
   try {
+    uploadedImagePath = await uploadCategoryImage(formData);
     await createAdminCategory(parseCategoryInput(formData));
   } catch (error) {
+    if (uploadedImagePath) {
+      await getStorageAdapter()
+        .deleteFile(uploadedImagePath)
+        .catch(() => {});
+    }
     redirect(
       `/admin/categories?error=${encodeURIComponent(adminRecordError(error))}`,
     );
@@ -379,7 +396,9 @@ export async function updateCategoryAction(
   await requireAdminAction();
   let previousSlug = "";
   let nextSlug = "";
+  let uploadedImagePath: string | null = null;
   try {
+    uploadedImagePath = await uploadCategoryImage(formData);
     const result = await updateAdminCategory(
       categoryId,
       parseCategoryInput(formData),
@@ -387,6 +406,11 @@ export async function updateCategoryAction(
     previousSlug = result.previousSlug;
     nextSlug = result.category.slug;
   } catch (error) {
+    if (uploadedImagePath) {
+      await getStorageAdapter()
+        .deleteFile(uploadedImagePath)
+        .catch(() => {});
+    }
     redirect(
       `/admin/categories?error=${encodeURIComponent(adminRecordError(error))}`,
     );

@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import sharp from "sharp";
 import type {
   StorageAdapter,
+  ImageStorageFolder,
   StoredDocument,
   StoredImage,
   StoredPaymentAttachment,
@@ -15,11 +16,19 @@ import {
   validatePdfFileMetadata,
 } from "@/lib/storage/storage-adapter";
 
-const uploadPublicPath = "/images/products/uploads";
-const uploadDirectory = path.join(
-  process.cwd(),
-  "public/images/products/uploads",
-);
+const uploadRoots: Record<
+  ImageStorageFolder,
+  { publicPath: string; directory: string }
+> = {
+  products: {
+    publicPath: "/images/products/uploads",
+    directory: path.join(process.cwd(), "public/images/products/uploads"),
+  },
+  categories: {
+    publicPath: "/images/categories/uploads",
+    directory: path.join(process.cwd(), "public/images/categories/uploads"),
+  },
+};
 const invoiceStoragePrefix = "invoices";
 const invoiceDirectory = path.join(process.cwd(), ".storage/invoices");
 const paymentStoragePrefix = "payments";
@@ -50,7 +59,10 @@ export async function convertToWebp(input: Buffer) {
 }
 
 export class LocalStorageAdapter implements StorageAdapter {
-  async saveImage(file: File): Promise<StoredImage> {
+  async saveImage(
+    file: File,
+    folder: ImageStorageFolder = "products",
+  ): Promise<StoredImage> {
     const validationError = validateImageFileMetadata(file);
     if (validationError) throw new ImageStorageError(validationError);
 
@@ -63,11 +75,12 @@ export class LocalStorageAdapter implements StorageAdapter {
       throw new ImageStorageError("تعذر قراءة الصورة أو أنها تالفة.");
     }
 
-    await mkdir(uploadDirectory, { recursive: true });
+    const uploadRoot = uploadRoots[folder];
+    await mkdir(uploadRoot.directory, { recursive: true });
     const filename = `${Date.now()}-${randomUUID()}.webp`;
-    await writeFile(path.join(uploadDirectory, filename), output.data);
+    await writeFile(path.join(uploadRoot.directory, filename), output.data);
     return {
-      path: `${uploadPublicPath}/${filename}`,
+      path: `${uploadRoot.publicPath}/${filename}`,
       mimeType: "image/webp",
       width: output.info.width,
       height: output.info.height,
@@ -181,9 +194,12 @@ export class LocalStorageAdapter implements StorageAdapter {
       return;
     }
     // الملفات الحالية خارج uploads محفوظة دائماً؛ الحذف يزيل ارتباطها فقط.
-    if (!filePath.startsWith(`${uploadPublicPath}/`)) return;
+    const uploadRoot = Object.values(uploadRoots).find(({ publicPath }) =>
+      filePath.startsWith(`${publicPath}/`),
+    );
+    if (!uploadRoot) return;
     const filename = path.basename(filePath);
-    const absolutePath = path.join(uploadDirectory, filename);
+    const absolutePath = path.join(uploadRoot.directory, filename);
     try {
       await unlink(absolutePath);
     } catch (error) {

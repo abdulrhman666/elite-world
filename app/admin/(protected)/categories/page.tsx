@@ -55,6 +55,7 @@ export default async function AdminCategoriesPage({
           <AdminCategoryForm
             action={createCategoryAction}
             media={catalog.media}
+            categoryMedia={catalog.categoryMedia}
             aiEnabled={catalog.aiEnabled}
           />
         </section>
@@ -101,6 +102,10 @@ export default async function AdminCategoriesPage({
                         category={category}
                         action={updateCategoryAction.bind(null, category.id)}
                         media={catalog.media}
+                        categoryMedia={catalog.categoryMedia}
+                        productMedia={
+                          catalog.productMediaByCategory[category.id] ?? []
+                        }
                         aiEnabled={catalog.aiEnabled}
                       />
                     </div>

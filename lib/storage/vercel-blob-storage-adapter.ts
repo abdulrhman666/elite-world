@@ -8,6 +8,7 @@ import {
   LocalStorageAdapter,
 } from "@/lib/storage/local-storage-adapter";
 import type {
+  ImageStorageFolder,
   StorageAdapter,
   StoredImage,
 } from "@/lib/storage/storage-adapter";
@@ -24,7 +25,10 @@ function isVercelBlobUrl(filePath: string) {
 export class VercelBlobStorageAdapter implements StorageAdapter {
   private readonly localStorage = new LocalStorageAdapter();
 
-  async saveImage(file: File): Promise<StoredImage> {
+  async saveImage(
+    file: File,
+    folder: ImageStorageFolder = "products",
+  ): Promise<StoredImage> {
     const validationError = validateImageFileMetadata(file);
     if (validationError) throw new ImageStorageError(validationError);
 
@@ -38,7 +42,7 @@ export class VercelBlobStorageAdapter implements StorageAdapter {
 
     try {
       const filename = `${Date.now()}-${randomUUID()}.webp`;
-      const blob = await put(`products/${filename}`, output.data, {
+      const blob = await put(`${folder}/${filename}`, output.data, {
         access: "public",
         addRandomSuffix: false,
         contentType: "image/webp",
