@@ -20,6 +20,14 @@ const categorySelect = {
   ogDescription: true,
   ogImage: true,
   seoImageAlt: true,
+  products: {
+    where: {
+      image: { not: "/images/products/demo-equipment-placeholder.svg" },
+    },
+    select: { image: true },
+    orderBy: [{ featured: "desc" }, { sortOrder: "asc" }],
+    take: 1,
+  },
   _count: { select: { products: true } },
 } satisfies Prisma.CategorySelect;
 
@@ -87,6 +95,15 @@ type PrismaProductDetail = Prisma.ProductGetPayload<{
   select: typeof productDetailSelect;
 }>;
 
+const legacyCategoryArtwork = new Set([
+  "/images/equipment-blueprint.svg",
+  "/images/bakery-blueprint.svg",
+  "/images/cafe-blueprint.svg",
+  "/images/cooling-blueprint.svg",
+  "/images/project-blueprint.svg",
+  "/images/stainless-blueprint.svg",
+]);
+
 function mapCategory(category: PrismaCategory): Category {
   return {
     slug: category.slug,
@@ -94,6 +111,9 @@ function mapCategory(category: PrismaCategory): Category {
     nameEn: category.nameEn,
     description: category.description,
     image: category.image,
+    cardImage: legacyCategoryArtwork.has(category.image)
+      ? (category.products[0]?.image ?? category.image)
+      : category.image,
     icon: category.icon as Category["icon"],
     subcategories: category.subcategories as Category["subcategories"],
     productCount: category._count.products,

@@ -32,11 +32,17 @@ export default async function CategoriesPage() {
         <Container>
           {categories.length > 0 ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {categories.map((category) => (
+              {categories.map((category, index) => (
                 <CategoryCard
                   key={category.slug}
                   category={category}
                   count={category.productCount ?? 0}
+                  className={
+                    categories.length % 4 === 1 &&
+                    index === categories.length - 1
+                      ? "lg:col-span-2 lg:col-start-2"
+                      : undefined
+                  }
                 />
               ))}
             </div>

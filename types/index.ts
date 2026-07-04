@@ -11,6 +11,7 @@ export type Category = {
   nameEn: string;
   description: string;
   image: string;
+  cardImage?: string;
   icon: string;
   subcategories: Array<{ slug: string; name: string }>;
   productCount?: number;

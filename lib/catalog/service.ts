@@ -26,7 +26,7 @@ const cacheOptions: { revalidate: number; tags: string[] } = {
 
 const readCategories = unstable_cache(
   () => prismaCatalogRepository.getCategories(),
-  ["catalog-categories-v2"],
+  ["catalog-categories-v3"],
   cacheOptions,
 );
 const readBrands = unstable_cache(
@@ -46,7 +46,7 @@ const readOrderProducts = unstable_cache(
 );
 const readCategoryBySlug = unstable_cache(
   (slug: string) => prismaCatalogRepository.getCategoryBySlug(slug),
-  ["catalog-category-v2"],
+  ["catalog-category-v3"],
   cacheOptions,
 );
 const readProductBySlug = unstable_cache(
