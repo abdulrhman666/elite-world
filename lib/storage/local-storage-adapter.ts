@@ -28,7 +28,7 @@ const paymentDirectory = path.join(process.cwd(), ".storage/payments");
 export class ImageStorageError extends Error {}
 export class DocumentStorageError extends Error {}
 
-async function convertToWebp(input: Buffer) {
+export async function convertToWebp(input: Buffer) {
   const processor = sharp(input, {
     failOn: "error",
     limitInputPixels: 40_000_000,

@@ -26,6 +26,7 @@
     "@fontsource/ibm-plex-sans-arabic": "5.2.9",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@vercel/blob": "^2.5.0",
     "csv-parse": "^7.0.0",
     "dotenv": "^17.4.2",
     "lucide-react": "1.21.0",

@@ -46,7 +46,7 @@ npm start
 - `components/catalog/`: البحث والفلاتر وواجهة واتساب وعناوين صفحات الكتالوج.
 - `components/cart/` و`components/checkout/`: السلة المحلية وإكمال الطلب أو عرض السعر.
 - `lib/catalog/`: Repository/Service موحّدان لقراءة الكتالوج من Prisma.
-- `lib/storage/`: Storage Adapter لمعالجة الصور وتخزينها محلياً، قابل للاستبدال بمخزن سحابي لاحقاً.
+- `lib/storage/`: Storage Adapter يضغط صور المنتجات ويحفظها في Vercel Blob على الإنتاج، مع تخزين محلي تلقائي للتطوير.
 - `prisma/`: مخطط قاعدة البيانات وMigration وSeed للكتالوج.
 - `config/site.ts`: القيم الافتراضية الآمنة لبيانات الشركة والهوية وروابط التنقل.
 - `data/import/elite_world_products_catalog.csv`: المصدر الحالي لمنتجات الكتالوج.
