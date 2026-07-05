@@ -22,19 +22,23 @@ const trustItems = [
 
 export function CommerceTrustBadges({ className }: { className?: string }) {
   return (
-    <div className={cn("grid gap-3 sm:grid-cols-3", className)}>
+    <div className={cn("grid grid-cols-3 gap-2 sm:gap-3", className)}>
       {trustItems.map(({ icon: Icon, title, text }) => (
         <div
           key={title}
-          className="border-brand-border flex gap-3 rounded-2xl border bg-white p-4"
+          className="border-brand-border flex min-w-0 flex-col items-center gap-1 rounded-xl border bg-white p-2 text-center sm:flex-row sm:items-start sm:gap-3 sm:rounded-2xl sm:p-4 sm:text-start"
         >
           <Icon
-            className="text-brand-cyan mt-0.5 size-5 shrink-0"
+            className="text-brand-cyan size-4 shrink-0 sm:mt-0.5 sm:size-5"
             aria-hidden
           />
           <div>
-            <p className="text-brand-ink text-sm font-bold">{title}</p>
-            <p className="mt-1 text-xs leading-5 text-slate-500">{text}</p>
+            <p className="text-brand-ink text-[11px] leading-4 font-bold sm:text-sm">
+              {title}
+            </p>
+            <p className="mt-1 hidden text-xs leading-5 text-slate-500 sm:block">
+              {text}
+            </p>
           </div>
         </div>
       ))}
@@ -45,7 +49,7 @@ export function CommerceTrustBadges({ className }: { className?: string }) {
 export function CommerceTrustBar() {
   return (
     <section
-      className="border-brand-border border-b bg-white py-5"
+      className="border-brand-border border-b bg-white py-3 sm:py-5"
       aria-label="معلومات الثقة والطلب"
     >
       <Container>

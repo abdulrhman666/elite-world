@@ -47,6 +47,11 @@ enum AdminRole {
   ADMIN
 }
 
+enum EmailCodePurpose {
+  VERIFY_ACCOUNT
+  RESET_PASSWORD
+}
+
 model Category {
   id             String    @id @default(cuid())
   slug           String    @unique
@@ -242,25 +247,42 @@ model ContentPage {
 }
 
 model User {
-  id           String         @id @default(cuid())
-  email        String         @unique
-  passwordHash String
-  name         String
-  companyName  String?
-  phone        String
-  city         String
-  address      String?
-  role         AdminRole?
-  orders       Order[]
-  quotes       Quote[]
-  wishlist     WishlistItem[]
-  cart         Cart[]
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id              String         @id @default(cuid())
+  email           String         @unique
+  emailVerifiedAt DateTime?
+  passwordHash    String
+  name            String
+  companyName     String?
+  phone           String
+  city            String
+  address         String?
+  role            AdminRole?
+  orders          Order[]
+  quotes          Quote[]
+  wishlist        WishlistItem[]
+  cart            Cart[]
+  emailCodes      EmailCode[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   @@index([createdAt])
   @@index([role])
   @@map("Customer")
+}
+
+model EmailCode {
+  id         String           @id @default(cuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purpose    EmailCodePurpose
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int              @default(0)
+  consumedAt DateTime?
+  createdAt  DateTime         @default(now())
+
+  @@index([userId, purpose, createdAt])
+  @@index([expiresAt])
 }
 
 model WishlistItem {

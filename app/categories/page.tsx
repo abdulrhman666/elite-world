@@ -31,7 +31,7 @@ export default async function CategoriesPage() {
       <section className="section-space bg-white" aria-label="قائمة الأقسام">
         <Container>
           {categories.length > 0 ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {categories.map((category, index) => (
                 <CategoryCard
                   key={category.slug}

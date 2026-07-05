@@ -27,9 +27,9 @@ export default async function CustomerRegisterPage({
           {error && (
             <Alert className="mt-5">
               {error === "exists"
-                ? "يوجد حساب بهذا البريد الإلكتروني."
+                ? "يوجد حساب بهذا البريد الإلكتروني. استخدم تسجيل الدخول أو استعادة كلمة المرور."
                 : error === "config"
-                  ? "خدمة الحسابات غير متاحة حتى ربط قاعدة البيانات."
+                  ? "إنشاء الحسابات متوقف مؤقتاً حتى يكتمل إعداد إرسال البريد."
                   : "تحقق من البيانات وكلمة المرور ثم حاول مجدداً."}
             </Alert>
           )}
@@ -55,10 +55,13 @@ export default async function CustomerRegisterPage({
             />
             <div className="flex items-end">
               <Button type="submit" size="lg" className="w-full">
-                إنشاء الحساب
+                إنشاء الحساب وإرسال الرمز
               </Button>
             </div>
           </form>
+          <p className="mt-4 text-center text-xs leading-6 text-slate-500">
+            سنرسل رمزاً من 6 أرقام إلى بريدك لتأكيد الحساب مرة واحدة.
+          </p>
           <p className="mt-6 text-center text-sm text-slate-600">
             لديك حساب؟{" "}
             <Link

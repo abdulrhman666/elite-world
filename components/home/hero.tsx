@@ -7,7 +7,7 @@ import type { SiteSettingsData } from "@/types/site-settings";
 export function Hero({ settings }: { settings: SiteSettingsData }) {
   return (
     <section
-      className="bg-brand-ink relative isolate overflow-hidden py-20 text-white sm:py-28"
+      className="bg-brand-ink relative isolate overflow-hidden py-12 text-white sm:py-20 lg:py-24"
       aria-labelledby="hero-title"
     >
       <Image
@@ -21,12 +21,12 @@ export function Hero({ settings }: { settings: SiteSettingsData }) {
       />
       <div className="bg-brand-ink/75 absolute inset-0 -z-10" />
       <Container className="text-center">
-        <h1 id="hero-title" className="text-4xl font-bold sm:text-6xl">
+        <h1 id="hero-title" className="text-3xl font-bold sm:text-5xl lg:text-6xl">
           ابحث عن معدات المطاعم
         </h1>
         <form
           action="/shop"
-          className="mx-auto mt-9 flex max-w-4xl rounded-2xl bg-white p-2 shadow-2xl"
+          className="mx-auto mt-6 flex max-w-4xl rounded-2xl bg-white p-2 shadow-2xl sm:mt-8"
         >
           <label className="relative flex-1">
             <span className="sr-only">
@@ -40,12 +40,12 @@ export function Hero({ settings }: { settings: SiteSettingsData }) {
               name="q"
               type="search"
               placeholder="اسم المعدة، SKU، الموديل أو العلامة التجارية"
-              className="text-brand-ink min-h-14 w-full rounded-xl ps-4 pe-14 text-base outline-none sm:text-lg"
+              className="text-brand-ink min-h-12 w-full rounded-xl ps-3 pe-12 text-sm outline-none sm:min-h-14 sm:ps-4 sm:pe-14 sm:text-lg"
             />
           </label>
           <button
             type="submit"
-            className="bg-brand-cyan text-brand-ink min-h-14 rounded-xl px-6 font-bold sm:px-9"
+            className="bg-brand-cyan min-h-12 rounded-xl px-5 font-bold text-white sm:min-h-14 sm:px-9"
           >
             بحث
           </button>

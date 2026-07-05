@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const errors: Record<string, string> = {
-  config: "خدمة حسابات العملاء غير متاحة حتى ربط قاعدة البيانات.",
+  config: "خدمة حسابات العملاء غير متاحة مؤقتاً.",
   credentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
   session: "انتهت الجلسة. سجّل الدخول مجدداً.",
 };
@@ -38,6 +38,11 @@ export default async function CustomerLoginPage({
               يمكنك تسجيل الدخول مجدداً في أي وقت.
             </Alert>
           )}
+          {params.success === "password-reset" && (
+            <Alert title="تم تغيير كلمة المرور" className="mt-5">
+              يمكنك الآن الدخول بكلمة المرور الجديدة.
+            </Alert>
+          )}
           <form action={loginCustomerAction} className="mt-7 space-y-5">
             <input
               type="hidden"
@@ -46,6 +51,14 @@ export default async function CustomerLoginPage({
             />
             <AuthField name="email" label="البريد الإلكتروني" type="email" />
             <AuthField name="password" label="كلمة المرور" type="password" />
+            <div className="text-left">
+              <Link
+                href="/auth/forgot-password"
+                className="text-brand-petroleum text-sm font-bold"
+              >
+                نسيت كلمة المرور؟
+              </Link>
+            </div>
             <Button type="submit" size="lg" className="w-full">
               دخول
             </Button>

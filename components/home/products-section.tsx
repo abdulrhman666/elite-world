@@ -23,7 +23,7 @@ export async function ProductsSection() {
     <>
       <section
         id="best-sellers"
-        className="section-space bg-white"
+        className="bg-white py-10 sm:py-16 lg:py-20"
         aria-labelledby="best-sellers-title"
       >
         <Container>
@@ -32,7 +32,6 @@ export async function ProductsSection() {
               id="best-sellers-title"
               eyebrow="اختيار العملاء"
               title="الأكثر طلباً"
-              description="معدات يتكرر طلبها من عملائنا، مرتبة حسب بيانات الطلبات الفعلية."
             />
             <ButtonLink
               href="/shop?sort=best-selling"
@@ -42,16 +41,16 @@ export async function ProductsSection() {
               عرض المتجر
             </ButtonLink>
           </div>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-7 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-5 xl:grid-cols-4">
             {bestSellingProducts.map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <ProductCard key={product.slug} product={product} compact />
             ))}
           </div>
         </Container>
       </section>
 
       <section
-        className="section-space bg-brand-surface"
+        className="bg-brand-surface py-10 sm:py-16 lg:py-20"
         aria-labelledby="products-title"
       >
         <Container>
@@ -60,7 +59,6 @@ export async function ProductsSection() {
               id="products-title"
               eyebrow="مختارات التشغيل"
               title="منتجات مميزة"
-              description="مختارات من الكتالوج تعرض الموديل والتوفر والسعر أو خيار طلب عرض السعر."
             />
             <ButtonLink
               href="/shop"
@@ -70,9 +68,9 @@ export async function ProductsSection() {
               تصفح الكتالوج
             </ButtonLink>
           </div>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-7 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-5 xl:grid-cols-4">
             {distinctFeatured.slice(0, 8).map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <ProductCard key={product.slug} product={product} compact />
             ))}
           </div>
         </Container>

@@ -388,9 +388,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             >
               منتجات مشابهة
             </h2>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
               {similarProducts.map((item) => (
-                <ProductCard key={item.slug} product={item} />
+                <ProductCard key={item.slug} product={item} compact />
               ))}
             </div>
           </Container>

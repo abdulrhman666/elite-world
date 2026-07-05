@@ -24,11 +24,13 @@ export function AddToQuoteButton({
   productSlug,
   productName,
   openQuote = false,
+  label = "أضف لعرض السعر",
   className,
 }: {
   productSlug: string;
   productName: string;
   openQuote?: boolean;
+  label?: string;
   className?: string;
 }) {
   const router = useRouter();
@@ -63,7 +65,7 @@ export function AddToQuoteButton({
       onClick={add}
       icon={<FilePlus2 className="size-4" aria-hidden />}
     >
-      أضف لعرض السعر
+      {label}
     </Button>
   );
 }

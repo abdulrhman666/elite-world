@@ -242,9 +242,9 @@ export function CatalogExplorer({
       </div>
 
       {results.length > 0 ? (
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
           {visibleResults.map((product) => (
-            <ProductCard key={product.slug} product={product} />
+            <ProductCard key={product.slug} product={product} compact />
           ))}
         </div>
       ) : (

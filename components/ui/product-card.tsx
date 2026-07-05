@@ -9,8 +9,75 @@ import { ButtonLink } from "@/components/ui/button";
 import { formatProductPrice, getAvailabilityLabel } from "@/lib/catalog";
 import type { Product } from "@/types";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({
+  product,
+  compact = false,
+}: {
+  product: Product;
+  compact?: boolean;
+}) {
   const available = product.stockQuantity > 0;
+
+  if (compact) {
+    return (
+      <article className="group border-brand-border shadow-soft hover:shadow-card min-w-0 overflow-hidden rounded-2xl border bg-white transition duration-300 hover:-translate-y-1">
+        <div className="relative aspect-square overflow-hidden bg-gradient-to-b from-slate-50 to-cyan-50/60">
+          <Image
+            src={product.image}
+            alt={product.imageAlt ?? `صورة المنتج ${product.nameAr}`}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-contain p-3 mix-blend-multiply transition duration-500 group-hover:scale-[1.03] sm:p-4"
+          />
+          <span
+            className={`absolute top-2 right-2 rounded-lg px-2 py-1 text-[10px] font-bold ${available ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-900"}`}
+          >
+            {available ? "متوفر" : "غير متوفر"}
+          </span>
+        </div>
+        <div className="p-3 sm:p-4">
+          <p className="font-latin text-brand-cyan truncate text-[10px] font-bold tracking-wide sm:text-xs">
+            {product.model}
+          </p>
+          <h3 className="text-brand-ink mt-1 line-clamp-2 min-h-10 text-sm leading-5 font-bold sm:min-h-12 sm:text-base sm:leading-6">
+            {product.nameAr}
+          </h3>
+          <p className="mt-1 truncate text-[11px] text-slate-500 sm:text-xs">
+            {product.brand}
+          </p>
+          <p className="text-brand-petroleum mt-2 text-sm font-bold sm:text-base">
+            {formatProductPrice(product.price)}
+          </p>
+          <div className="mt-3 grid gap-2">
+            <ButtonLink
+              href={`/products/${product.slug}`}
+              variant="outline"
+              size="sm"
+              className="min-h-10 w-full px-2 text-xs"
+            >
+              التفاصيل
+            </ButtonLink>
+            {product.price === null ? (
+              <AddToQuoteButton
+                productSlug={product.slug}
+                productName={product.nameAr}
+                label="عرض سعر"
+                className="min-h-10 w-full px-2 text-xs"
+              />
+            ) : (
+              <AddToCartButton
+                productSlug={product.slug}
+                productName={product.nameAr}
+                stockQuantity={product.stockQuantity}
+                label="إضافة"
+                className="min-h-10 w-full px-2 text-xs"
+              />
+            )}
+          </div>
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article className="group border-brand-border shadow-soft hover:shadow-card overflow-hidden rounded-3xl border bg-white transition duration-300 hover:-translate-y-1">
