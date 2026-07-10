@@ -27,7 +27,8 @@ import {
   getCatalogSimilarProducts,
   isCatalogDatabaseConfigured,
 } from "@/lib/catalog/service";
-import { isPlaceholderValue } from "@/lib/whatsapp";
+import { getSiteSettings } from "@/lib/site-settings";
+import { getWhatsAppContactUrl } from "@/lib/whatsapp";
 import { absoluteSiteUrl, buildSeoMetadata } from "@/lib/seo/metadata";
 import { getPermanentRedirect } from "@/lib/seo/redirects";
 
@@ -72,6 +73,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     if (redirect) permanentRedirect(redirect.destinationPath);
     notFound();
   }
+  const settings = await getSiteSettings();
   const categoryName = product.categoryName ?? "القسم";
   const similarProducts = await getCatalogSimilarProducts(
     product.categorySlug,
@@ -259,7 +261,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </div>
               <CommerceTrustBadges className="mt-5" />
 
-              {isPlaceholderValue(siteConfig.whatsapp) && (
+              {!getWhatsAppContactUrl(settings.whatsapp) && (
                 <Alert
                   title="واتساب غير مفعّل"
                   className="mt-4 max-w-xl text-start"
