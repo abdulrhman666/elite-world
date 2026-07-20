@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getPublishedActivities } from "@/lib/activities";
 import {
   getCatalogCategories,
   getCatalogProducts,
@@ -10,11 +11,12 @@ import { getPublishedBlogPosts } from "@/lib/blog/service";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [catalogCategories, catalogProducts, pages, posts] = await Promise.all([
+  const [catalogCategories, catalogProducts, pages, posts, activities] = await Promise.all([
     getCatalogCategories(),
     getCatalogProducts(),
     getPageSeoRecords(),
     getPublishedBlogPosts(),
+    getPublishedActivities(),
   ]);
   const now = new Date();
   return [
@@ -51,6 +53,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: post.createdAt,
       changeFrequency: "monthly" as const,
       priority: 0.65,
+    })),
+    ...activities.map((activity) => ({
+      url: absoluteSiteUrl(`/activities/${activity.slug}`),
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
     })),
   ];
 }

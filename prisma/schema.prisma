@@ -127,6 +127,7 @@ model Product {
   orderItems       OrderItem[]
   wishlistItems    WishlistItem[]
   cartItems        Cart[]
+  activityLinks    ActivityProduct[]
   createdAt        DateTime               @default(now())
   updatedAt        DateTime               @updatedAt
 
@@ -134,6 +135,47 @@ model Product {
   @@index([brandId])
   @@index([availability])
   @@index([stockQuantity])
+}
+
+model Activity {
+  id             String            @id @default(cuid())
+  slug           String            @unique
+  name           String
+  eyebrow        String
+  heroTitle      String
+  heroDescription String
+  introduction   String
+  image          String
+  primaryCtaText String            @default("اطلب عرض تجهيز كامل")
+  published      Boolean           @default(false)
+  sortOrder      Int               @default(0)
+  seoTitle       String?
+  seoDescription String?
+  canonicalUrl   String?
+  seoIndexable   Boolean           @default(true)
+  ogTitle        String?
+  ogDescription  String?
+  ogImage        String?
+  seoImageAlt    String?
+  productLinks   ActivityProduct[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([published, sortOrder])
+}
+
+model ActivityProduct {
+  activityId    String
+  productId     String
+  activity      Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  equipmentGroup String
+  essential     Boolean  @default(true)
+  sortOrder     Int      @default(0)
+
+  @@id([activityId, productId])
+  @@index([productId])
+  @@index([activityId, equipmentGroup, essential, sortOrder])
 }
 
 model ProductImage {

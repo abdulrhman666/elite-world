@@ -21,6 +21,7 @@ import { ProductCard } from "@/components/ui/product-card";
 import { Container } from "@/components/ui/container";
 import { Alert, EmptyState } from "@/components/ui/feedback";
 import { siteConfig } from "@/config/site";
+import { getActivityComplementaryProducts } from "@/lib/activities";
 import { formatProductPrice, getAvailabilityLabel } from "@/lib/catalog";
 import {
   getCatalogProductBySlug,
@@ -73,12 +74,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
     if (redirect) permanentRedirect(redirect.destinationPath);
     notFound();
   }
-  const settings = await getSiteSettings();
   const categoryName = product.categoryName ?? "القسم";
-  const similarProducts = await getCatalogSimilarProducts(
-    product.categorySlug,
-    product.slug,
-    3,
+  const [settings, similarProducts, activityComplements] = await Promise.all([
+    getSiteSettings(),
+    getCatalogSimilarProducts(product.categorySlug, product.slug, 3),
+    getActivityComplementaryProducts(product.slug, 4),
+  ]);
+  const similarSlugs = new Set(similarProducts.map((item) => item.slug));
+  const complementaryProducts = activityComplements.filter(
+    (item) => !similarSlugs.has(item.slug),
   );
   const productUrl = absoluteSiteUrl(`/products/${product.slug}`);
   const productSchema: Record<string, unknown> = {
@@ -392,6 +396,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </h2>
             <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
               {similarProducts.map((item) => (
+                <ProductCard key={item.slug} product={item} compact />
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {complementaryProducts.length > 0 && (
+        <section className="section-space bg-white" aria-labelledby="complementary-products">
+          <Container>
+            <p className="text-brand-cyan text-sm font-bold">أكمل خط التشغيل</p>
+            <h2 id="complementary-products" className="text-brand-ink mt-2 text-3xl font-bold">
+              منتجات تكمل هذا المنتج
+            </h2>
+            <p className="mt-3 max-w-2xl leading-7 text-slate-600">
+              اقتراحات من باقات تجهيز الأنشطة تساعدك على بناء خط عمل متكامل.
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+              {complementaryProducts.map((item) => (
                 <ProductCard key={item.slug} product={item} compact />
               ))}
             </div>

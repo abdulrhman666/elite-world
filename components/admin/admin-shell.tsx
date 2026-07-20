@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BriefcaseBusiness,
   ExternalLink,
   CreditCard,
   FileClock,
@@ -35,6 +36,7 @@ const navigationGroups = [
     label: "الكتالوج",
     items: [
       { label: "المنتجات", href: "/admin/products", icon: Package },
+      { label: "الأنشطة", href: "/admin/activities", icon: BriefcaseBusiness },
       { label: "الأقسام", href: "/admin/categories", icon: Shapes },
       { label: "العلامات التجارية", href: "/admin/brands", icon: Tags },
       { label: "مكتبة الصور", href: "/admin/media", icon: Images },

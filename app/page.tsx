@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CommerceTrustBar } from "@/components/commerce/trust-layer";
+import { ActivitiesSection } from "@/components/home/activities-section";
 import { CategoriesSection } from "@/components/home/categories-section";
 import { FinalCta } from "@/components/home/final-cta";
 import { Hero } from "@/components/home/hero";
@@ -31,6 +32,7 @@ export default async function HomePage() {
     <>
       <Hero settings={settings} />
       <CommerceTrustBar />
+      <ActivitiesSection />
       <CategoriesSection />
       <ProductsSection />
       <FinalCta />
