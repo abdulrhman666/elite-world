@@ -209,6 +209,34 @@ model ProductSpecification {
   @@index([productId])
 }
 
+model ProductImportRun {
+  id                String    @id @default(cuid())
+  fileName          String
+  checksum          String
+  adminEmail        String
+  operation         String    @default("IMPORT")
+  status            String    @default("ANALYZED")
+  sourceRows        Int       @default(0)
+  newCount          Int       @default(0)
+  updateCount       Int       @default(0)
+  unchangedCount    Int       @default(0)
+  errorCount        Int       @default(0)
+  duplicateCount    Int       @default(0)
+  missingImageCount Int       @default(0)
+  analysis          Json?
+  snapshot          Json?
+  result            Json?
+  startedAt         DateTime?
+  completedAt       DateTime?
+  rolledBackAt      DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@index([adminEmail, createdAt])
+}
+
 model SiteSettings {
   id                      Int      @id @default(1)
   companyNameAr           String

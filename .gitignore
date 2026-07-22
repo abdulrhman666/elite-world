@@ -14,3 +14,5 @@ out/
 
 # Delivery archives
 *.zip
+.vercel
+.env*

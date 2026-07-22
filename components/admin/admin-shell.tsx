@@ -7,6 +7,7 @@ import {
   FileClock,
   FileText,
   Images,
+  Import,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -36,6 +37,11 @@ const navigationGroups = [
     label: "الكتالوج",
     items: [
       { label: "المنتجات", href: "/admin/products", icon: Package },
+      {
+        label: "استيراد وتصدير",
+        href: "/admin/product-transfer",
+        icon: Import,
+      },
       { label: "الأنشطة", href: "/admin/activities", icon: BriefcaseBusiness },
       { label: "الأقسام", href: "/admin/categories", icon: Shapes },
       { label: "العلامات التجارية", href: "/admin/brands", icon: Tags },
